@@ -17,10 +17,9 @@ def harris_corner(img, k=0.04, block_size=2, kernel=11):
     Iyy = dy*dy
     Ixy = dx*dy
     
-    corners = np.array([[0, 0, 0]], dtype=np.float32)
-    cov_xx = cv2.boxFilter(Ixx, -1, (block_size, block_size))
-    cov_yy = cv2.boxFilter(Iyy, -1, (block_size, block_size))
-    cov_xy = cv2.boxFilter(Ixy, -1, (block_size, block_size))
+    cov_xx = cv2.boxFilter(Ixx, -1, (block_size, block_size), normalize=False)
+    cov_yy = cv2.boxFilter(Iyy, -1, (block_size, block_size), normalize=False)
+    cov_xy = cv2.boxFilter(Ixy, -1, (block_size, block_size), normalize=False)
 
     for y in range(height):
         for x in range(width):

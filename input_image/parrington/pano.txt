@@ -1,234 +1,234 @@
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn00.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn01.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999837 0.0125485 0.0129957 
--0.0125474 0.999921 -0.000163239 
--0.0129968 1.77461e-008 0.999916 
+0.999743 0.0177755 0.0140283 
+-0.0177738 0.999842 -0.000249541 
+-0.0140305 -2.96402e-008 0.999901 
 
-704.916
+706.469
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn01.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn02.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999751 0.0116409 0.019017 
--0.0174296 0.939922 0.340943 
--0.0139056 -0.34119 0.939892 
+0.999739 0.0125568 0.0190934 
+-0.0183017 0.940279 0.339913 
+-0.0136849 -0.340174 0.940263 
 
-706.286
+706.038
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn02.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn03.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999738 0.00542292 0.0222183 
--0.0183971 0.76783 0.640389 
--0.0135871 -0.64063 0.767729 
+0.999754 0.0047948 0.0216509 
+-0.0174794 0.771213 0.636337 
+-0.0136463 -0.636559 0.771107 
 
-705.849
+706.833
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn03.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn04.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999754 -0.00270263 0.0220286 
--0.0176068 0.507692 0.861359 
--0.0135117 -0.861534 0.50752 
+0.999772 -0.00329792 0.0211093 
+-0.0166016 0.502002 0.864707 
+-0.0134487 -0.86486 0.501833 
 
-706.645
+706.808
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn04.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn05.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999773 -0.0101374 0.0187398 
--0.0166562 0.176595 0.984143 
--0.013286 -0.984231 0.176386 
+0.999764 -0.0107146 0.0188852 
+-0.0166196 0.1821 0.98314 
+-0.013973 -0.983222 0.181879 
 
-706.587
+705.696
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn05.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn06.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999768 -0.0163314 0.0140616 
--0.0165597 -0.164592 0.986223 
--0.013792 -0.986227 -0.164824 
+0.999739 -0.0167935 0.0154589 
+-0.0181366 -0.173245 0.984712 
+-0.0138586 -0.984735 -0.173504 
 
-705.645
+705.358
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn06.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn07.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999739 -0.0209713 0.00907201 
--0.0183294 -0.49899 0.866414 
--0.013643 -0.866354 -0.499244 
+0.999756 -0.0203695 0.00853718 
+-0.017509 -0.495355 0.868514 
+-0.0134622 -0.868452 -0.495591 
 
-705.327
+704.723
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn07.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn08.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999759 -0.0219182 0.00128269 
--0.0175386 -0.762117 0.647201 
--0.0132079 -0.647068 -0.762318 
+0.999765 -0.021667 0.000442477 
+-0.016862 -0.764898 0.643931 
+-0.0136136 -0.643787 -0.765083 
 
-704.696
+703.822
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn08.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn09.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999769 -0.0204025 -0.00675267 
--0.0168341 -0.93879 0.344078 
--0.0133594 -0.343885 -0.938917 
+0.999734 -0.0222154 -0.0060973 
+-0.0187799 -0.939217 0.342811 
+-0.0133423 -0.342606 -0.939385 
 
-703.794
+704.344
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn09.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn10.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999739 -0.0187396 -0.0130737 
--0.0187212 -0.999824 0.00152596 
--0.0131 -0.00128114 -0.999913 
+0.999715 -0.0202222 -0.0126994 
+-0.0201267 -0.999768 0.00760757 
+-0.0128503 -0.00734959 -0.99989 
 
-704.325
+704.697
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn10.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn11.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999719 -0.014691 -0.0186098 
--0.0200683 -0.942286 -0.334207 
--0.012626 0.334486 -0.942316 
+0.999826 -0.00851104 -0.0166011 
+-0.0136779 -0.939575 -0.342069 
+-0.0126866 0.342237 -0.939528 
 
-704.696
+703.769
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn11.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn12.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999829 -0.00243201 -0.0183121 
--0.0136276 -0.766347 -0.642282 
--0.0124714 0.642422 -0.76625 
+0.999781 -0.00351665 -0.0206224 
+-0.0159759 -0.764768 -0.644108 
+-0.0135063 0.644296 -0.764656 
 
-703.895
+704.176
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn12.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn13.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999788 0.00373152 -0.0202601 
--0.0156962 -0.498976 -0.866474 
--0.0133426 0.866608 -0.498811 
+0.999774 0.00388351 -0.0208954 
+-0.0160898 -0.504054 -0.863522 
+-0.013886 0.863663 -0.503878 
 
-704.289
+704.648
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn13.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn14.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999776 0.0107062 -0.0182412 
--0.0160308 -0.179035 -0.983712 
--0.0137976 0.983785 -0.178823 
+0.999728 0.0106655 -0.0207542 
+-0.0186136 -0.171878 -0.984942 
+-0.0140721 0.98506 -0.171632 
 
-704.676
+704.783
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn14.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn15.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999724 0.0170425 -0.0161519 
--0.0188807 0.174525 -0.984472 
--0.013959 0.984505 0.174799 
+0.999731 0.0165118 -0.016251 
+-0.0188868 0.174627 -0.984453 
+-0.0134172 0.984496 0.174892 
 
-704.847
+704.471
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn15.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn16.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.99973 0.0209993 -0.00992217 
--0.0190962 0.50004 -0.865792 
--0.0132196 0.865748 0.500306 
+0.999729 0.0208748 -0.0102817 
+-0.0192991 0.496958 -0.86756 
+-0.0130006 0.867523 0.497227 
 
-704.537
+705.068
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn16.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn17.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999729 0.0230953 -0.00284565 
--0.0194683 0.763135 -0.645945 
--0.0127467 0.645826 0.763379 
+0.999755 0.0220637 -0.00193894 
+-0.0182358 0.77029 -0.637433 
+-0.0125706 0.637312 0.770503 
 
-705.102
+705.544
 
-D:\courses\vfx\2005Spring\projects\proj#2\test_data\parrington\prtn17.jpg
+C:\Users\ssarcandy\Documents\GitHub\panoramas-image-stitching\input_image\parrington\prtn00.jpg
 384 512
 
 1 0 255.5 
 0 1 191.5 
 0 0 1 
 
-0.999758 0.0213145 0.00543071 
--0.0182463 0.941549 -0.336383 
--0.0122831 0.336202 0.94171 
+0.999829 0.0166193 0.00806302 
+-0.0128697 0.939853 -0.341337 
+-0.0132509 0.341175 0.939906 
 
-705.576
+704.968
 
