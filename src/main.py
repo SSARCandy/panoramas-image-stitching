@@ -5,7 +5,7 @@ import cv2
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-import feature_detection
+import feature
 import utils
 
 img_list = utils.load_images('../input_image/parrington')
