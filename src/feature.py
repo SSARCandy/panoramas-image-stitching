@@ -84,6 +84,8 @@ def matching(descriptor1, descriptor2, feature_position1, feature_position2):
         sorted_index = np.argpartition(distances, 1)
         local_optimal = distances[sorted_index[0]]
         local_optimal2 = distances[sorted_index[1]]
+        if local_optimal > local_optimal2:
+            local_optimal, local_optimal2 = local_optimal2, local_optimal
         
         if local_optimal/local_optimal2 <= 0.5:
             paired_index = np.where(distances==local_optimal)[0][0]

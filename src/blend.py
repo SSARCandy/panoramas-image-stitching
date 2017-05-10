@@ -40,23 +40,37 @@ def RANSAC(matched_pairs):
 
 # img should bigger than img2
 def blending(img1, img2, shift):
-    blended_img = []
+    padding = [
+        (shift[0] if shift[0] > 0 else 0, -shift[0] if shift[0] < 0 else 0),
+        (shift[1] if shift[1] > 0 else 0, -shift[1] if shift[1] < 0 else 0),
+        (0, 0)
+    ]
+    shifted_img1 = np.lib.pad(img1, padding, 'constant', constant_values=0)
     
-    # img2 at lower-left
-    if shift[0] > 0 and shift[1] > 0:
-        shifted_img = np.lib.pad(img1, [(shift[0], 0), (shift[1], 0), (0, 0)], 'constant', constant_values=0)
-        h, w, _ = img2.shape
-        _, width, _ = img2.shape
+    h1, w1, _ = shifted_img1.shape
+    h2, w2, _ = img2.shape
+    
+    inv_shift = [h1-h2, w1-w2]
+    inv_padding = [
+        (inv_shift[0] if shift[0] < 0 else 0, inv_shift[0] if shift[0] > 0 else 0),
+        (inv_shift[1] if shift[1] < 0 else 0, inv_shift[1] if shift[1] > 0 else 0),
+        (0, 0)
+    ]
+    shifted_img2 = np.lib.pad(img2, inv_padding, 'constant', constant_values=0)
 
-        for y in range(h):
-            for x in range(w):
-                if list(shifted_img[y][x]) != [0, 0, 0]:
-                    color1 = shifted_img[y][x]
-                    color2 = img2[y][x]
-                    ratio = ((width - x)/shift[1])**3
-                    shifted_img[y][x] = (1-ratio)*color1 + ratio*color2
-                else:
-                    shifted_img[y][x] = img2[y][x]
-        blended_img = shifted_img
-  
-    return blended_img
+    for y in range(h1):
+        for x in range(w1):
+            color1 = shifted_img1[y][x]
+            color2 = shifted_img2[y][x]
+            
+            if list(color1) == [0, 0, 0]:
+                shifted_img1[y][x] = color2
+            elif list(color2) == [0, 0, 0]:
+                shifted_img1[y][x] = shifted_img1[y][x]
+            else:
+                ratio = x/w1
+                if ((color1 - color2)**2).sum() > 10**2:
+                    ratio = 1
+                shifted_img1[y][x] = (1-ratio)*color1 + ratio*color2
+      
+    return shifted_img1
