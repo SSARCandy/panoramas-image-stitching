@@ -17,6 +17,21 @@ def load_images(source_dir):
 
     return image_list
 
+def parse(source_dir):
+    filenames = []
+    focal_length = []
+    f = open(os.path.join(source_dir, 'image_list.txt'))
+    for line in f:
+        if (line[0] == '#'):
+            continue
+        (filename, f, *rest) = line.split()
+        filenames += [filename]
+        focal_length += [f]
+    
+    img_list = [cv2.imread(os.path.join(source_dir, f), 1) for f in filenames]
+
+    return (img_list, focal_length)
+
 def cylindrical_projection(img, focal_length):
     height, width, _ = img.shape
     cylinder_proj = np.zeros(shape=img.shape, dtype=np.uint8)

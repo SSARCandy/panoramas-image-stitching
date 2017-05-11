@@ -12,15 +12,14 @@ import blend
 
 
 
-
 if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list = utils.load_images('../input_image/parrington')
+    img_list, focal_length = utils.parse('../input_image/denny')
 
     print('Warp images to cylinder')
-    cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img, 706) for img in img_list])
+    cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], float(focal_length[i])) for i in range(len(img_list))])
 
     shifts = []
     direction = ''

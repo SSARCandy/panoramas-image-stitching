@@ -1,0 +1,16 @@
+# filename    focal_length
+denny00.jpg 656.818
+denny01.jpg 660.097
+denny02.jpg 664.76
+denny03.jpg 669.366
+denny04.jpg 668.418
+denny05.jpg 646.746
+denny06.jpg 648.193
+denny07.jpg 648.035
+denny08.jpg 651.922
+denny09.jpg 650.603
+denny10.jpg 646.745
+denny11.jpg 648.183
+denny12.jpg 649.81
+denny13.jpg 653.88
+denny14.jpg 653.861

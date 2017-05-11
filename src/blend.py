@@ -40,8 +40,8 @@ def RANSAC(matched_pairs):
 # img should bigger than img2
 def blending(img1, img2, shift, pool):
     padding = [
-        (shift[0], 0) if shift[0] > 0 else (0, shift[0]),
-        (shift[1], 0) if shift[1] > 0 else (0, shift[1]),
+        (shift[0], 0) if shift[0] > 0 else (0, -shift[0]),
+        (shift[1], 0) if shift[1] > 0 else (0, -shift[1]),
         (0, 0)
     ]
     shifted_img1 = np.lib.pad(img1, padding, 'constant', constant_values=0)
