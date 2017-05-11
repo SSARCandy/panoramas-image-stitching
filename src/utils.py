@@ -26,7 +26,7 @@ def parse(source_dir):
             continue
         (filename, f, *rest) = line.split()
         filenames += [filename]
-        focal_length += [f]
+        focal_length += [float(f)]
     
     img_list = [cv2.imread(os.path.join(source_dir, f), 1) for f in filenames]
 

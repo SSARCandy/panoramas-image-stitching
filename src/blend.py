@@ -45,9 +45,12 @@ def blending(img1, img2, shift, pool):
         (0, 0)
     ]
     shifted_img1 = np.lib.pad(img1, padding, 'constant', constant_values=0)
-    splited = shifted_img1[:, img2.shape[1]:] if shift[1] > 0 else shifted_img1[:, :-img2.shape[1]]
-    shifted_img1 = shifted_img1[:, :img2.shape[1]] if shift[1] > 0 else shifted_img1[:, -img2.shape[1]:]
-    
+
+    # cut out unencessary region
+    split = img2.shape[1]+abs(shift[1])
+    splited = shifted_img1[:, split:] if shift[1] > 0 else shifted_img1[:, :-split]
+    shifted_img1 = shifted_img1[:, :split] if shift[1] > 0 else shifted_img1[:, -split:]
+
     h1, w1, _ = shifted_img1.shape
     h2, w2, _ = img2.shape
     

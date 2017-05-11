@@ -16,10 +16,11 @@ if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/denny')
-
+    img_list, focal_length = utils.parse('../input_image/parrington')
+    
     print('Warp images to cylinder')
-    cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], float(focal_length[i])) for i in range(len(img_list))])
+    f = np.asarray(focal_length).mean()
+    cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img, int(f)) for img in img_list])
 
     shifts = []
     direction = ''
@@ -52,11 +53,11 @@ if __name__ == '__main__':
             cv2.waitKey(0)
         
         print(' - Feature matching .... ', end='', flush=True)
-        mp = feature.matching(descriptors1, descriptors2, position1, position2)
-        print(str(len(mp)) +' features matched.')
+        meatched_pair = feature.matching(descriptors1, descriptors2, position1, position2)
+        print(str(len(meatched_pair)) +' features matched.')
 
         print(' - Find best shift using RANSAC .... ', end='', flush=True)
-        shift = blend.RANSAC(mp)
+        shift = blend.RANSAC(meatched_pair)
         shifts += [shift]
         print('best shift ', shift)
         if direction == '':

@@ -1,0 +1,19 @@
+# filename    focal_length
+prtn00.jpg	704.907
+prtn01.jpg	706.361
+prtn02.jpg	705.988
+prtn03.jpg	706.771
+prtn04.jpg	706.701
+prtn05.jpg	705.664
+prtn06.jpg	705.328
+prtn07.jpg	704.686
+prtn08.jpg	703.777
+prtn09.jpg	704.28
+prtn10.jpg	704.606
+prtn11.jpg	703.775
+prtn12.jpg	704.193
+prtn13.jpg	704.597
+prtn14.jpg	704.752
+prtn15.jpg	704.428
+prtn16.jpg	704.993
+prtn17.jpg	705.46
