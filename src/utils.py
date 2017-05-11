@@ -5,6 +5,8 @@ import sys
 import cv2
 import math
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def load_images(source_dir):
     imgs = []
@@ -54,3 +56,15 @@ def cylindrical_projection(img, focal_length):
     x, y, w, h = cv2.boundingRect(contours[0])
         
     return cylinder_proj[y:y+h, x:x+w]
+
+def matched_pairs_plot(p1, p2, mp):
+    _, offset, _ = p1.shape
+    plt_img = np.concatenate((p1, p2), axis=1)
+    plt.figure(figsize=(10,10))
+    plt.imshow(plt_img)
+    for i in range(len(mp)):
+        plt.scatter(x=mp[i][0][1], y=mp[i][0][0], c='r')
+        plt.plot([mp[i][0][1], offset+mp[i][1][1]], [mp[i][0][0], mp[i][1][0]], 'y-', lw=1)
+        plt.scatter(x=offset+mp[i][1][1], y=mp[i][1][0], c='b')
+    plt.show()
+    cv2.waitKey(0)

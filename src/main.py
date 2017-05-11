@@ -16,11 +16,10 @@ if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/parrington')
+    img_list, focal_length = utils.parse('../input_image/parrington2')
     
     print('Warp images to cylinder')
-    f = np.asarray(focal_length).mean()
-    cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img, int(f)) for img in img_list])
+    cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
 
     shifts = []
     direction = ''
@@ -47,17 +46,20 @@ if __name__ == '__main__':
         descriptors2, position2 = feature.extract_description(img2, corner_response2, kernel=5, threshold=0.05)
         print(str(len(descriptors2))+' features extracted.')
 
-        if DEBUG:
+        if False:
             cv2.imshow('cr1', corner_response1)
             cv2.imshow('cr2', corner_response2)
             cv2.waitKey(0)
         
         print(' - Feature matching .... ', end='', flush=True)
-        meatched_pair = feature.matching(descriptors1, descriptors2, position1, position2)
-        print(str(len(meatched_pair)) +' features matched.')
+        matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, y_range=10)
+        print(str(len(matched_pairs)) +' features matched.')
+
+        if DEBUG:
+            utils.matched_pairs_plot(cylinder_img_list[i-1], img2, matched_pairs)
 
         print(' - Find best shift using RANSAC .... ', end='', flush=True)
-        shift = blend.RANSAC(meatched_pair)
+        shift = blend.RANSAC(matched_pairs)
         shifts += [shift]
         print('best shift ', shift)
         if direction == '':
