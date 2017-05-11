@@ -9,7 +9,7 @@ def RANSAC(matched_pairs):
     
     best_shift = []
     K = 1000
-    threshold_distance = 20
+    threshold_distance = 3
     
     max_inliner = 0
     for k in range(K):
@@ -58,14 +58,14 @@ def blending(img1, img2, shift, pool):
     ]
     shifted_img2 = np.lib.pad(img2, inv_padding, 'constant', constant_values=0)
 
-
-    shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y]) for y in range(h1)])
+    direction = 'left' if shift[1] > 0 else 'right'
+    shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y], direction) for y in range(h1)])
       
     shifted_img1 = np.asarray(shifted_img1)
     shifted_img1 = np.concatenate((shifted_img1, splited), axis=1)
     return shifted_img1
 
-def get_new_row_colors(row1, row2):
+def get_new_row_colors(row1, row2, direction):
     new_row = np.zeros(shape=row1.shape, dtype=np.uint8)
 
     for x in range(len(row1)):
@@ -76,10 +76,10 @@ def get_new_row_colors(row1, row2):
         elif list(color2) == [0, 0, 0]:
             new_row[x] = color1
         else:
-            ratio = x/len(row1)
-            if ((color1 - color2)**2).sum() > 10000:
-                ratio = 1
-            new_row[x] = (1-ratio)*color1 + ratio*color2
+            ratio = x/len(row1) if direction == 'left' else (1-x/len(row1))
+            # if ((color1 - color2)**2).sum() > 1000:
+            #     ratio = 1
+            new_row[x] = (1-ratio)*color2 + ratio*color1
 
     return new_row
 
