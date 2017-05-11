@@ -38,18 +38,12 @@ def harris_corner(img, k=0.04, block_size=2, kernel=11):
 
 def extract_description(img, corner_response, threshold=0.01, kernel=3):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    #gray = cv2.GaussianBlur(gray, (kernel, kernel), kernel)
     
     # Reduce corner
     features = np.zeros(shape=gray.shape, dtype=np.uint8)
     features[corner_response > threshold*corner_response.max()] = 255
     features[:10,:] = 0  # Trim feature on image edge
     features[-10:,:] = 0
-    
-    #plt.figure(figsize=(10,10))
-    #plt.imshow(features, cmap='gray')
-    #plt.colorbar()
-    #plt.show()
     
     feature_positions = []
     feature_descriptions = np.zeros(shape=(1, kernel**2), dtype=np.float32)
@@ -89,11 +83,9 @@ def matching(descriptor1, descriptor2, feature_position1, feature_position2):
         
         if local_optimal/local_optimal2 <= 0.5:
             paired_index = np.where(distances==local_optimal)[0][0]
-            #print(featue_position1[i], paired_index)
             pair = [feature_position1[i], feature_position2[paired_index]]
             matched_pairs += [pair]
             matched_pairs_rank += [local_optimal]
-            #print(pair)
     
     # Refine pairs
     sorted_rank_idx = np.argsort(matched_pairs_rank)

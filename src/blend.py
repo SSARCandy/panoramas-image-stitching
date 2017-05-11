@@ -2,25 +2,23 @@
 
 import numpy as np
 
+
 # find best shift using RANSAC
 def RANSAC(matched_pairs):
     matched_pairs = np.asarray(matched_pairs)
     
     best_shift = []
-    K = 500
+    K = 1000
     threshold_distance = 20
     
     max_inliner = 0
     for k in range(K):
-        
         # Random pick a pair of matched feature
         random_idx = int(np.random.random_sample()*len(matched_pairs))
         sample = matched_pairs[random_idx]
         
         # fit the warp model
         shift = sample[1] - sample[0]
-        #print(sample)
-        #print(shift)
         
         # calculate inliner points
         shifted = matched_pairs[:,1] - shift
@@ -39,10 +37,10 @@ def RANSAC(matched_pairs):
 
 
 # img should bigger than img2
-def blending(img1, img2, shift):
+def blending(img1, img2, shift, pool):
     padding = [
-        (shift[0] if shift[0] > 0 else 0, -shift[0] if shift[0] < 0 else 0),
-        (shift[1] if shift[1] > 0 else 0, -shift[1] if shift[1] < 0 else 0),
+        (shift[0], 0) if shift[0] > 0 else (0, shift[0]),
+        (shift[1], 0) if shift[1] > 0 else (0, shift[1]),
         (0, 0)
     ]
     shifted_img1 = np.lib.pad(img1, padding, 'constant', constant_values=0)
@@ -52,25 +50,32 @@ def blending(img1, img2, shift):
     
     inv_shift = [h1-h2, w1-w2]
     inv_padding = [
-        (inv_shift[0] if shift[0] < 0 else 0, inv_shift[0] if shift[0] > 0 else 0),
-        (inv_shift[1] if shift[1] < 0 else 0, inv_shift[1] if shift[1] > 0 else 0),
+        (inv_shift[0], 0) if shift[0] < 0 else (0, inv_shift[0]),
+        (inv_shift[1], 0) if shift[1] < 0 else (0, inv_shift[1]),
         (0, 0)
     ]
     shifted_img2 = np.lib.pad(img2, inv_padding, 'constant', constant_values=0)
 
-    for y in range(h1):
-        for x in range(w1):
-            color1 = shifted_img1[y][x]
-            color2 = shifted_img2[y][x]
-            
-            if list(color1) == [0, 0, 0]:
-                shifted_img1[y][x] = color2
-            elif list(color2) == [0, 0, 0]:
-                shifted_img1[y][x] = shifted_img1[y][x]
-            else:
-                ratio = x/w1
-                if ((color1 - color2)**2).sum() > 10**2:
-                    ratio = 1
-                shifted_img1[y][x] = (1-ratio)*color1 + ratio*color2
+
+    shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y]) for y in range(h1)])
       
-    return shifted_img1
+    return np.asarray(shifted_img1)
+
+
+def get_new_row_colors(row1, row2):
+    new_row = np.zeros(shape=row1.shape, dtype=np.uint8)
+
+    for x in range(len(row1)):
+        color1 = row1[x]
+        color2 = row2[x]
+        if list(color1) == [0, 0, 0]:
+            new_row[x] = color2
+        elif list(color2) == [0, 0, 0]:
+            new_row[x] = color1
+        else:
+            ratio = x/len(row1)
+            if ((color1 - color2)**2).sum() > 100:
+                ratio = 1
+            new_row[x] = (1-ratio)*color1 + ratio*color2
+
+    return new_row
