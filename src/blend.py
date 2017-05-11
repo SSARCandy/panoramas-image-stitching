@@ -44,6 +44,8 @@ def blending(img1, img2, shift, pool):
         (0, 0)
     ]
     shifted_img1 = np.lib.pad(img1, padding, 'constant', constant_values=0)
+    splited = shifted_img1[:, img2.shape[1]:] if shift[1] > 0 else shifted_img1[:, :-img2.shape[1]]
+    shifted_img1 = shifted_img1[:, :img2.shape[1]] if shift[1] > 0 else shifted_img1[:, -img2.shape[1]:]
     
     h1, w1, _ = shifted_img1.shape
     h2, w2, _ = img2.shape
@@ -59,8 +61,9 @@ def blending(img1, img2, shift, pool):
 
     shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y]) for y in range(h1)])
       
-    return np.asarray(shifted_img1)
-
+    shifted_img1 = np.asarray(shifted_img1)
+    shifted_img1 = np.concatenate((shifted_img1, splited), axis=1)
+    return shifted_img1
 
 def get_new_row_colors(row1, row2):
     new_row = np.zeros(shape=row1.shape, dtype=np.uint8)
@@ -74,8 +77,14 @@ def get_new_row_colors(row1, row2):
             new_row[x] = color1
         else:
             ratio = x/len(row1)
-            if ((color1 - color2)**2).sum() > 100:
+            if ((color1 - color2)**2).sum() > 10000:
                 ratio = 1
             new_row[x] = (1-ratio)*color1 + ratio*color2
 
     return new_row
+
+
+def blend_all(imgs, shifts):
+    shifts = np.asarray(shifts)
+    global_shift = np.sum(shifts, axis=0)
+

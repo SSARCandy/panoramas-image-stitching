@@ -22,6 +22,7 @@ if __name__ == '__main__':
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img, 706) for img in img_list])
 
+    shifts = []
     direction = ''
     _, img_width, _ = img_list[0].shape
     blended_image = cylinder_img_list[0].copy()
@@ -54,11 +55,14 @@ if __name__ == '__main__':
 
         print(' - Find best shift using RANSAC .... ', end='', flush=True)
         shift = blend.RANSAC(mp)
+        shifts += [shift]
         print('best shift ', shift)
         if direction == '':
             direction = 'left' if shift[1] > 0 else 'right'
 
-        print(' - Blending image ....', end='', flush=True)
+        print(' - Blending image .... ', end='', flush=True)
         blended_image = blend.blending(blended_image, img2, shift, pool)
         cv2.imwrite('tmp'+ str(i) +'.jpg', blended_image)
         print('Saved.')
+
+    # blend.blend_all(cylinder_img_list, shifts)
