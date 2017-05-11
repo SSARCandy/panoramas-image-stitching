@@ -59,7 +59,7 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
                 
     return feature_descriptions[1:], feature_positions
 
-def matching(descriptor1, descriptor2, feature_position1, feature_position2):
+def matching(descriptor1, descriptor2, feature_position1, feature_position2, y_range=10):
     matched_pairs = []
     matched_pairs_rank = []
     
@@ -70,7 +70,7 @@ def matching(descriptor1, descriptor2, feature_position1, feature_position2):
             diff = float('Inf')
             
             # only compare features that have similiar y-axis 
-            if y-10 <= feature_position2[j][0] <= y+10:
+            if y-y_range <= feature_position2[j][0] <= y+y_range:
                 diff = descriptor1[i] - descriptor2[j]
                 diff = (diff**2).sum()
             distances += [diff]

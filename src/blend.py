@@ -1,7 +1,8 @@
 # coding: utf-8
 
 import numpy as np
-
+import cv2
+import feature
 
 # find best shift using RANSAC
 def RANSAC(matched_pairs):
@@ -84,7 +85,39 @@ def get_new_row_colors(row1, row2, direction):
     return new_row
 
 
-def blend_all(imgs, shifts):
-    shifts = np.asarray(shifts)
-    global_shift = np.sum(shifts, axis=0)
+def end2end_align(img):
+    p1 = img[:,:500]
+    p2 = img[:,-500:]
 
+    cr1 = feature.harris_corner(p1)
+    ds1, pos1 = feature.extract_description(p1, cr1, kernel=5, threshold=0.05)
+
+    cr2 = feature.harris_corner(p2)
+    ds2, pos2 = feature.extract_description(p2, cr2, kernel=5, threshold=0.05)
+
+    mp =  feature.matching(ds1, ds2, pos1, pos2, y_range=150)
+
+    y_shift, _ = RANSAC(mp)
+
+    aligned = img.copy()
+    col_shift = np.linspace(y_shift, 0, num=img.shape[1], dtype=np.uint8)
+    for x in range(img.shape[1]):
+        aligned[:,x] = np.roll(img[:,x], col_shift[x], axis=0)
+
+    return aligned
+
+def crop(img):
+    _, thresh = cv2.threshold(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), 1, 255, cv2.THRESH_BINARY)
+    upper, lower = [-1, -1]
+
+    for y in range(thresh.shape[0]):
+        if len(np.where(thresh[y] == 0)[0]) == 0:
+            upper = y
+            break
+        
+    for y in range(thresh.shape[0]-1, 0, -1):
+        if len(np.where(thresh[y] == 0)[0]) == 0:
+            lower = y
+            break
+
+    return img[upper:lower, :]

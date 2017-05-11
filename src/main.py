@@ -26,6 +26,9 @@ if __name__ == '__main__':
     direction = ''
     _, img_width, _ = img_list[0].shape
     blended_image = cylinder_img_list[0].copy()
+
+    # add first img for end to end align
+    cylinder_img_list += [blended_image]
     for i in range(1, len(cylinder_img_list)):
         print('Computing .... '+str(i+1)+'/'+str(len(cylinder_img_list)))
         img1 = blended_image
@@ -62,7 +65,13 @@ if __name__ == '__main__':
 
         print(' - Blending image .... ', end='', flush=True)
         blended_image = blend.blending(blended_image, img2, shift, pool)
-        cv2.imwrite('tmp'+ str(i) +'.jpg', blended_image)
+        cv2.imwrite(''+ str(i) +'.jpg', blended_image)
         print('Saved.')
 
-    # blend.blend_all(cylinder_img_list, shifts)
+    print('Preform end to end alignment')
+    aligned = blend.end2end_align(blended_image)
+    cv2.imwrite('aligned.jpg', aligned)
+
+    print('Crop image')
+    cropped = blend.crop(aligned)
+    cv2.imwrite('cropped.jpg', cropped)
