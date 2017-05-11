@@ -88,14 +88,14 @@ def get_new_row_colors(row1, row2, direction):
     return new_row
 
 
-def end2end_align(img):
+def end2end_align(img, pool):
     p1 = img[:,:500]
     p2 = img[:,-500:]
 
-    cr1 = feature.harris_corner(p1)
+    cr1 = feature.harris_corner(p1, pool)
     ds1, pos1 = feature.extract_description(p1, cr1, kernel=5, threshold=0.05)
 
-    cr2 = feature.harris_corner(p2)
+    cr2 = feature.harris_corner(p2, pool)
     ds2, pos2 = feature.extract_description(p2, cr2, kernel=5, threshold=0.05)
 
     mp =  feature.matching(ds1, ds2, pos1, pos2, y_range=150)

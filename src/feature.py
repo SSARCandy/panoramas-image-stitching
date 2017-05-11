@@ -3,8 +3,17 @@
 import cv2
 import numpy as np
 
+def compute_r(xx_row, yy_row, xy_row, k):
+    row_response = np.zeros(shape=xx_row.shape, dtype=np.float32)
+    for x in range(len(xx_row)):
+        det_M = xx_row[x]*yy_row[x] - xy_row[x]**2
+        trace_M = xx_row[x] + yy_row[x]
+        R = det_M - k*trace_M**2
+        row_response[x] = R
 
-def harris_corner(img, k=0.04, block_size=2, kernel=11):
+    return row_response
+
+def harris_corner(img, pool, k=0.04, block_size=2, kernel=11):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray = np.float32(gray)/255
 
@@ -21,19 +30,9 @@ def harris_corner(img, k=0.04, block_size=2, kernel=11):
     cov_yy = cv2.boxFilter(Iyy, -1, (block_size, block_size), normalize=False)
     cov_xy = cv2.boxFilter(Ixy, -1, (block_size, block_size), normalize=False)
 
-    for y in range(height):
-        for x in range(width):
-            xx = cov_xx[y][x]
-            yy = cov_yy[y][x]
-            xy = cov_xy[y][x]
-
-            det_M = xx*yy - xy**2
-            trace_M = xx + yy
+    corner_response = pool.starmap(compute_r, [(cov_xx[y], cov_yy[y], cov_xy[y], k) for y in range(height)])
             
-            R = det_M - k*trace_M**2
-            corner_response[y][x] = R
-            
-    return corner_response
+    return np.asarray(corner_response)
     
 
 def extract_description(img, corner_response, threshold=0.01, kernel=3):

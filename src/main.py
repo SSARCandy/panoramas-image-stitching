@@ -38,12 +38,12 @@ if __name__ == '__main__':
             img1 = blended_image[:, :img_width] if direction == 'left' else blended_image[:, -img_width:]
 
         print(' - Find features in previous img .... ', end='', flush=True)
-        corner_response1 = feature.harris_corner(img1)
+        corner_response1 = feature.harris_corner(img1, pool)
         descriptors1, position1 = feature.extract_description(img1, corner_response1, kernel=5, threshold=0.05)
         print(str(len(descriptors1))+' features extracted.')
 
         print(' - Find features in img_'+str(i+1)+' .... ', end='', flush=True)
-        corner_response2 = feature.harris_corner(img2)
+        corner_response2 = feature.harris_corner(img2, pool)
         descriptors2, position2 = feature.extract_description(img2, corner_response2, kernel=5, threshold=0.05)
         print(str(len(descriptors2))+' features extracted.')
 
@@ -68,10 +68,10 @@ if __name__ == '__main__':
         cv2.imwrite(''+ str(i) +'.jpg', blended_image)
         print('Saved.')
 
-    print('Preform end to end alignment')
-    aligned = blend.end2end_align(blended_image)
+    print('Perform end to end alignment')
+    aligned = blend.end2end_align(blended_image, pool)
     cv2.imwrite('aligned.jpg', aligned)
 
-    print('Crop image')
+    print('Cropping image')
     cropped = blend.crop(aligned)
     cv2.imwrite('cropped.jpg', cropped)
