@@ -16,7 +16,7 @@ if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/parrington2')
+    img_list, focal_length = utils.parse('../input_image/parrington')
     
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
@@ -52,7 +52,7 @@ if __name__ == '__main__':
             cv2.waitKey(0)
         
         print(' - Feature matching .... ', end='', flush=True)
-        matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, y_range=10)
+        matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, pool, y_range=10)
         print(str(len(matched_pairs)) +' features matched.')
 
         if DEBUG:

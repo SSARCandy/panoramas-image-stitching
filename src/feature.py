@@ -58,7 +58,24 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
                 
     return feature_descriptions[1:], feature_positions
 
-def matching(descriptor1, descriptor2, feature_position1, feature_position2, y_range=10):
+
+def matching(descriptor1, descriptor2, feature_position1, feature_position2, pool, y_range=10):
+    TASKS_NUM = 32
+
+    partition_descriptors = np.array_split(descriptor1, TASKS_NUM)
+    partition_positions = np.array_split(feature_position1, TASKS_NUM)
+
+    sub_tasks = [(partition_descriptors[i], descriptor2, partition_positions[i], feature_position2) for i in range(TASKS_NUM)]
+    results = pool.starmap(compute_match, sub_tasks)
+    
+    matched_pairs = []
+    for res in results:
+        if len(res) > 0:
+            matched_pairs += res
+
+    return matched_pairs
+
+def compute_match(descriptor1, descriptor2, feature_position1, feature_position2, y_range=10):
     matched_pairs = []
     matched_pairs_rank = []
     
@@ -85,7 +102,7 @@ def matching(descriptor1, descriptor2, feature_position1, feature_position2, y_r
             pair = [feature_position1[i], feature_position2[paired_index]]
             matched_pairs += [pair]
             matched_pairs_rank += [local_optimal]
-    
+
     # Refine pairs
     sorted_rank_idx = np.argsort(matched_pairs_rank)
     sorted_match_pairs = np.asarray(matched_pairs)
