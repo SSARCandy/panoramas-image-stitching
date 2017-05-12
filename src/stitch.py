@@ -37,8 +37,10 @@ def RANSAC(matched_pairs):
     return best_shift
 
 
-# img should bigger than img2
-def blending(img1, img2, shift, pool):
+'''
+img1:
+'''
+def stitching(img1, img2, shift, pool, blending=False):
     padding = [
         (shift[0], 0) if shift[0] > 0 else (0, -shift[0]),
         (shift[1], 0) if shift[1] > 0 else (0, -shift[1]),
@@ -46,7 +48,7 @@ def blending(img1, img2, shift, pool):
     ]
     shifted_img1 = np.lib.pad(img1, padding, 'constant', constant_values=0)
 
-    # cut out unencessary region
+    # cut out unnecessary region
     split = img2.shape[1]+abs(shift[1])
     splited = shifted_img1[:, split:] if shift[1] > 0 else shifted_img1[:, :-split]
     shifted_img1 = shifted_img1[:, :split] if shift[1] > 0 else shifted_img1[:, -split:]
@@ -63,8 +65,13 @@ def blending(img1, img2, shift, pool):
     shifted_img2 = np.lib.pad(img2, inv_padding, 'constant', constant_values=0)
 
     direction = 'left' if shift[1] > 0 else 'right'
-    shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y], direction) for y in range(h1)])
-      
+
+    if blending:
+       shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y], direction) for y in range(h1)])
+    else:
+        pass
+        
+
     shifted_img1 = np.asarray(shifted_img1)
     shifted_img1 = np.concatenate((shifted_img1, splited) if shift[1] > 0 else (splited, shifted_img1), axis=1)
     return shifted_img1
