@@ -1,0 +1,19 @@
+# filename    focal_length
+grail01.jpg  626.497
+grail02.jpg  625.997
+grail03.jpg  627.269
+grail04.jpg  627.555
+grail05.jpg  627.63
+grail06.jpg  625.261
+grail07.jpg  627.353
+grail08.jpg  627.942
+grail09.jpg  628.656
+grail10.jpg  628.934
+grail11.jpg  628.867
+grail12.jpg  629.89
+grail13.jpg  628.716
+grail14.jpg  630.983
+grail15.jpg  630.015
+grail16.jpg  630.456
+grail17.jpg  629.953
+grail00.jpg  629.084

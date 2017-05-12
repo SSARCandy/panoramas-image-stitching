@@ -1,5 +1,6 @@
-tmp/
-
+pano.txt
+pano.jpg
+src/*.jpg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
