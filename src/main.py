@@ -11,14 +11,23 @@ import utils
 import stitch
 
 
+DEBUG=False
+
 
 if __name__ == '__main__':
-    DEBUG=False
+    if len(sys.argv) != 2:
+        print('[Usage] python script <input img dir>')
+        print('[Exampe] python script ../input_image/parrington')
+        sys.exit(0)
+    
+    input_dirname = sys.argv[1]
+    
+
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/parrington2')
+    img_list, focal_length = utils.parse(input_dirname)
     
-    # img_list = img_list[:2]
+    # img_list = img_list[:3]
 
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
