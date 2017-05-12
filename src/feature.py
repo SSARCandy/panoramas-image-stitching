@@ -65,7 +65,7 @@ def matching(descriptor1, descriptor2, feature_position1, feature_position2, poo
     partition_descriptors = np.array_split(descriptor1, TASKS_NUM)
     partition_positions = np.array_split(feature_position1, TASKS_NUM)
 
-    sub_tasks = [(partition_descriptors[i], descriptor2, partition_positions[i], feature_position2) for i in range(TASKS_NUM)]
+    sub_tasks = [(partition_descriptors[i], descriptor2, partition_positions[i], feature_position2, y_range) for i in range(TASKS_NUM)]
     results = pool.starmap(compute_match, sub_tasks)
     
     matched_pairs = []

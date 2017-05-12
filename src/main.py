@@ -16,7 +16,7 @@ if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/parrington')
+    img_list, focal_length = utils.parse('../input_image/parrington2')
     
     # img_list = img_list[:2]
 
@@ -24,21 +24,17 @@ if __name__ == '__main__':
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
 
 
-    direction = ''
     _, img_width, _ = img_list[0].shape
     stitched_image = cylinder_img_list[0].copy()
 
     shifts = [[0, 0]]
 
     # add first img for end to end align
-    # cylinder_img_list += [stitched_image]
+    #cylinder_img_list += [stitched_image]
     for i in range(1, len(cylinder_img_list)):
         print('Computing .... '+str(i+1)+'/'+str(len(cylinder_img_list)))
         img1 = cylinder_img_list[i-1]
         img2 = cylinder_img_list[i]
-
-        # if direction != '':
-        #     img1 = stitched_image[:, :img_width] if direction == 'left' else stitched_image[:, -img_width:]
 
         print(' - Find features in previous img .... ', end='', flush=True)
         corner_response1 = feature.harris_corner(img1, pool)
@@ -66,15 +62,10 @@ if __name__ == '__main__':
         shift = stitch.RANSAC(matched_pairs)
         shifts += [shift]
         print('best shift ', shift)
-        # if direction == '':
-        #     direction = 'left' if shift[1] > 0 else 'right'
 
         print(' - Stitching image .... ', end='', flush=True)
-        # acc_shift = np.sum(shifts, axis=0)
-        # acc_shift = [acc_shift[0] + shift[0], acc_shift[1] + shift[1]]
-        # print(acc_shift)
         stitched_image = stitch.stitching(stitched_image, img2, shift, pool, blending=True)
-        cv2.imwrite(''+ str(i) +'.jpg', stitched_image)
+        cv2.imwrite(str(i) +'.jpg', stitched_image)
         print('Saved.')
 
 
