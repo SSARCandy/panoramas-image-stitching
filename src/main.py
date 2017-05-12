@@ -16,9 +16,9 @@ if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/parrington2')
+    img_list, focal_length = utils.parse('../input_image/parrington')
     
-    # img_list = img_list[:3]
+    # img_list = img_list[:2]
 
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         # if direction == '':
         #     direction = 'left' if shift[1] > 0 else 'right'
 
-        print(' - stitching image .... ', end='', flush=True)
+        print(' - Stitching image .... ', end='', flush=True)
         # acc_shift = np.sum(shifts, axis=0)
         # acc_shift = [acc_shift[0] + shift[0], acc_shift[1] + shift[1]]
         # print(acc_shift)
@@ -77,13 +77,11 @@ if __name__ == '__main__':
         cv2.imwrite(''+ str(i) +'.jpg', stitched_image)
         print('Saved.')
 
-    # stitched_image = stitch.stitching2(cylinder_img_list, shifts)
 
+    print('Perform end to end alignment')
+    aligned = stitch.end2end_align(stitched_image, pool)
+    cv2.imwrite('aligned.jpg', aligned)
 
-    # print('Perform end to end alignment')
-    # aligned = stitch.end2end_align(stitched_image, pool)
-    # cv2.imwrite('aligned.jpg', aligned)
-
-    # print('Cropping image')
-    # cropped = stitch.crop(aligned)
-    # cv2.imwrite('cropped.jpg', cropped)
+    print('Cropping image')
+    cropped = stitch.crop(aligned)
+    cv2.imwrite('cropped.jpg', cropped)

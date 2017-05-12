@@ -37,10 +37,8 @@ def RANSAC(matched_pairs):
     return best_shift
 
 
-'''
-img1:
-'''
-def stitching(img1, img2, shift, pool, blending=False):
+
+def stitching(img1, img2, shift, pool, blending=True):
     padding = [
         (shift[0], 0) if shift[0] > 0 else (0, -shift[0]),
         (shift[1], 0) if shift[1] > 0 else (0, -shift[1]),
@@ -67,29 +65,30 @@ def stitching(img1, img2, shift, pool, blending=False):
     direction = 'left' if shift[1] > 0 else 'right'
 
     if blending:
-       shifted_img1 = pool.starmap(get_new_row_colors, [(shifted_img1[y], shifted_img2[y], direction) for y in range(h1)])
+        seam_x = shifted_img1.shape[1]//2
+        shifted_img1 = pool.starmap(alpha_blend, [(shifted_img1[y], shifted_img2[y], seam_x, 2, direction) for y in range(h1)])
+        shifted_img1 = np.asarray(shifted_img1)
+        shifted_img1 = np.concatenate((shifted_img1, splited) if shift[1] > 0 else (splited, shifted_img1), axis=1)
     else:
-        pass
-        
+        raise ValueError('I did not implement "blending=False" ^_^')
 
-    shifted_img1 = np.asarray(shifted_img1)
-    shifted_img1 = np.concatenate((shifted_img1, splited) if shift[1] > 0 else (splited, shifted_img1), axis=1)
     return shifted_img1
 
-def get_new_row_colors(row1, row2, direction):
+def alpha_blend(row1, row2, seam_x, window, direction='left'):
+    if direction == 'right':
+        row1, row2 = row2, row1
+
     new_row = np.zeros(shape=row1.shape, dtype=np.uint8)
 
     for x in range(len(row1)):
         color1 = row1[x]
         color2 = row2[x]
-        if list(color1) == [0, 0, 0]:
+        if x < seam_x-window:
             new_row[x] = color2
-        elif list(color2) == [0, 0, 0]:
+        elif x > seam_x+window:
             new_row[x] = color1
         else:
-            ratio = 1#x/len(row1) if direction == 'left' else (1-x/len(row1))
-            # if ((color1 - color2)**2).sum() > 1000:
-            #     ratio = 1
+            ratio = (x-seam_x+window)/(window*2)
             new_row[x] = (1-ratio)*color2 + ratio*color1
 
     return new_row
