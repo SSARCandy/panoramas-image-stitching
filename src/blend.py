@@ -98,7 +98,7 @@ def end2end_align(img, pool):
     cr2 = feature.harris_corner(p2, pool)
     ds2, pos2 = feature.extract_description(p2, cr2, kernel=5, threshold=0.05)
 
-    mp =  feature.matching(ds1, ds2, pos1, pos2, y_range=150)
+    mp =  feature.matching(ds1, ds2, pos1, pos2, pool, y_range=150)
 
     y_shift, _ = RANSAC(mp)
 

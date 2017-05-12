@@ -16,25 +16,29 @@ if __name__ == '__main__':
     DEBUG=False
     pool = mp.Pool(mp.cpu_count())
 
-    img_list, focal_length = utils.parse('../input_image/parrington')
+    img_list, focal_length = utils.parse('../input_image/parrington2')
     
+    # img_list = img_list[:3]
+
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
 
-    shifts = []
+
     direction = ''
     _, img_width, _ = img_list[0].shape
     blended_image = cylinder_img_list[0].copy()
 
+    shifts = [[0, 0]]
+
     # add first img for end to end align
-    cylinder_img_list += [blended_image]
+    # cylinder_img_list += [blended_image]
     for i in range(1, len(cylinder_img_list)):
         print('Computing .... '+str(i+1)+'/'+str(len(cylinder_img_list)))
-        img1 = blended_image
+        img1 = cylinder_img_list[i-1]
         img2 = cylinder_img_list[i]
 
-        if direction != '':
-            img1 = blended_image[:, :img_width] if direction == 'left' else blended_image[:, -img_width:]
+        # if direction != '':
+        #     img1 = blended_image[:, :img_width] if direction == 'left' else blended_image[:, -img_width:]
 
         print(' - Find features in previous img .... ', end='', flush=True)
         corner_response1 = feature.harris_corner(img1, pool)
@@ -56,24 +60,30 @@ if __name__ == '__main__':
         print(str(len(matched_pairs)) +' features matched.')
 
         if DEBUG:
-            utils.matched_pairs_plot(cylinder_img_list[i-1], img2, matched_pairs)
+            utils.matched_pairs_plot(img1, img2, matched_pairs)
 
         print(' - Find best shift using RANSAC .... ', end='', flush=True)
         shift = blend.RANSAC(matched_pairs)
         shifts += [shift]
         print('best shift ', shift)
-        if direction == '':
-            direction = 'left' if shift[1] > 0 else 'right'
+        # if direction == '':
+        #     direction = 'left' if shift[1] > 0 else 'right'
 
         print(' - Blending image .... ', end='', flush=True)
+        # acc_shift = np.sum(shifts, axis=0)
+        # acc_shift = [acc_shift[0] + shift[0], acc_shift[1] + shift[1]]
+        # print(acc_shift)
         blended_image = blend.blending(blended_image, img2, shift, pool)
         cv2.imwrite(''+ str(i) +'.jpg', blended_image)
         print('Saved.')
 
-    print('Perform end to end alignment')
-    aligned = blend.end2end_align(blended_image, pool)
-    cv2.imwrite('aligned.jpg', aligned)
+    # blended_image = blend.blending2(cylinder_img_list, shifts)
 
-    print('Cropping image')
-    cropped = blend.crop(aligned)
-    cv2.imwrite('cropped.jpg', cropped)
+
+    # print('Perform end to end alignment')
+    # aligned = blend.end2end_align(blended_image, pool)
+    # cv2.imwrite('aligned.jpg', aligned)
+
+    # print('Cropping image')
+    # cropped = blend.crop(aligned)
+    # cv2.imwrite('cropped.jpg', cropped)
