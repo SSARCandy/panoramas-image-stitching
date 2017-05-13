@@ -41,14 +41,29 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
     # Reduce corner
     features = np.zeros(shape=gray.shape, dtype=np.uint8)
     features[corner_response > threshold*corner_response.max()] = 255
-    features[:10,:] = 0  # Trim feature on image edge
+
+    # Trim feature on image edge
+    features[:10,:] = 0  
     features[-10:,:] = 0
+    features[:,-10:] = 0
+    features[:,:10] = 0
     
+    # Reduce features using local maximum
+    height, width, _ = img.shape
+    window=3
+    for y in range(0, height-10, window):
+        for x in range(0, width-10, window):
+            if features[y:y+window, x:x+window].sum() == 0:
+                continue
+            block = corner_response[y:y+window, x:x+window]
+            max_y, max_x = np.unravel_index(np.argmax(block), (window, window))
+            features[y:y+window, x:x+window] = 0
+            features[y+max_y][x+max_x] = 255
+
     feature_positions = []
     feature_descriptions = np.zeros(shape=(1, kernel**2), dtype=np.float32)
     
     half_k = kernel//2
-    height, width, _ = img.shape
     for y in range(half_k, height-half_k):
         for x in range(half_k, width-half_k):
             if features[y][x] == 255:
@@ -91,6 +106,12 @@ def compute_match(descriptor1, descriptor2, feature_position1, feature_position2
                 diff = (diff**2).sum()
             distances += [diff]
         
+        # paired_index = np.argmax(distances)
+        # # paired_index = np.where(distances==local_optimal)[0][0]
+        # pair = [feature_position1[i], feature_position2[paired_index]]
+        # matched_pairs += [pair]
+        # matched_pairs_rank += [distances[paired_index]]
+
         sorted_index = np.argpartition(distances, 1)
         local_optimal = distances[sorted_index[0]]
         local_optimal2 = distances[sorted_index[1]]
