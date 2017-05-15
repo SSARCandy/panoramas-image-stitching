@@ -6,18 +6,20 @@ import feature
 import constant as const
 
 # find best shift using RANSAC
-def RANSAC(matched_pairs):
+def RANSAC(matched_pairs, prev_shift):
     matched_pairs = np.asarray(matched_pairs)
     
+    use_random = True if len(matched_pairs) > const.RANSAC_K else False
+
     best_shift = []
-    K = const.RANSAC_K
+    K = const.RANSAC_K if use_random else len(matched_pairs)
     threshold_distance = const.RANSAC_THRES_DISTANCE
     
     max_inliner = 0
     for k in range(K):
         # Random pick a pair of matched feature
-        random_idx = int(np.random.random_sample()*len(matched_pairs))
-        sample = matched_pairs[random_idx]
+        idx = int(np.random.random_sample()*len(matched_pairs)) if use_random else k
+        sample = matched_pairs[idx]
         
         # fit the warp model
         shift = sample[1] - sample[0]
@@ -34,7 +36,11 @@ def RANSAC(matched_pairs):
         if inliner > max_inliner:
             max_inliner = inliner
             best_shift = shift
-        
+
+    if prev_shift[1]*best_shift[1] < 0:
+        print('\n\nBest shift:', best_shift)
+        raise ValueError('Shift direction NOT same as previous shift.')
+
     return best_shift
 
 
@@ -96,22 +102,19 @@ def alpha_blend(row1, row2, seam_x, window, direction='left'):
     return new_row
 
 
-def end2end_align(img, pool):
-    p1 = img[:,:500]
-    p2 = img[:,-500:]
+def end2end_align(img, shifts):
+    sum_y, sum_x = np.sum(shifts, axis=0)
 
-    cr1 = feature.harris_corner(p1, pool)
-    ds1, pos1 = feature.extract_description(p1, cr1, kernel=const.DESCRIPTOR_SIZE, threshold=const.FEATURE_THRESHOLD)
+    y_shift = np.abs(sum_y)
+    col_shift = None
 
-    cr2 = feature.harris_corner(p2, pool)
-    ds2, pos2 = feature.extract_description(p2, cr2, kernel=const.DESCRIPTOR_SIZE, threshold=const.FEATURE_THRESHOLD)
-
-    mp =  feature.matching(ds1, ds2, pos1, pos2, pool, y_range=float('inf'))
-
-    y_shift, _ = RANSAC(mp)
+    # same sign
+    if sum_x*sum_y > 0:
+        col_shift = np.linspace(y_shift, 0, num=img.shape[1], dtype=np.uint16)
+    else:
+        col_shift = np.linspace(0, y_shift, num=img.shape[1], dtype=np.uint16)
 
     aligned = img.copy()
-    col_shift = np.linspace(y_shift, 0, num=img.shape[1], dtype=np.uint16)
     for x in range(img.shape[1]):
         aligned[:,x] = np.roll(img[:,x], col_shift[x], axis=0)
 

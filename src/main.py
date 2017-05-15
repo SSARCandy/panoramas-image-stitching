@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     img_list, focal_length = utils.parse(input_dirname)
     
-    # img_list = img_list[4:10]
+    # img_list = img_list[2:4]
 
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
@@ -58,10 +58,10 @@ if __name__ == '__main__':
 
         cache_feature = [descriptors2, position2]
 
-        if const.DEBUG:
-            cv2.imshow('cr1', corner_response1)
-            cv2.imshow('cr2', corner_response2)
-            cv2.waitKey(0)
+        # if const.DEBUG:
+        #     cv2.imshow('cr1', corner_response1)
+        #     cv2.imshow('cr2', corner_response2)
+        #     cv2.waitKey(0)
         
         print(' - Feature matching .... ', end='', flush=True)
         matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, pool, y_range=const.MATCHING_Y_RANGE)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
             utils.matched_pairs_plot(img1, img2, matched_pairs)
 
         print(' - Find best shift using RANSAC .... ', end='', flush=True)
-        shift = stitch.RANSAC(matched_pairs)
+        shift = stitch.RANSAC(matched_pairs, shifts[-1])
         shifts += [shift]
         print('best shift ', shift)
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
 
     print('Perform end to end alignment')
-    aligned = stitch.end2end_align(stitched_image, pool)
+    aligned = stitch.end2end_align(stitched_image, shifts)
     cv2.imwrite('aligned.jpg', aligned)
 
     print('Cropping image')
