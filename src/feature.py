@@ -2,6 +2,7 @@
 
 import cv2
 import numpy as np
+import constant as const
 
 def compute_r(xx_row, yy_row, xy_row, k):
     row_response = np.zeros(shape=xx_row.shape, dtype=np.float32)
@@ -43,10 +44,10 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
     features[corner_response > threshold*corner_response.max()] = 255
 
     # Trim feature on image edge
-    features[:50,:] = 0  
-    features[-50:,:] = 0
-    features[:,-10:] = 0
-    features[:,:10] = 0
+    features[:const.FEATURE_CUT_Y_EDGE, :] = 0  
+    features[-const.FEATURE_CUT_Y_EDGE:, :] = 0
+    features[:, -const.FEATURE_CUT_X_EDGE:] = 0
+    features[:, :const.FEATURE_CUT_X_EDGE] = 0
     
     # Reduce features using local maximum
     height, width, _ = img.shape
@@ -105,12 +106,6 @@ def compute_match(descriptor1, descriptor2, feature_position1, feature_position2
                 diff = descriptor1[i] - descriptor2[j]
                 diff = (diff**2).sum()
             distances += [diff]
-        
-        # paired_index = np.argmax(distances)
-        # # paired_index = np.where(distances==local_optimal)[0][0]
-        # pair = [feature_position1[i], feature_position2[paired_index]]
-        # matched_pairs += [pair]
-        # matched_pairs_rank += [distances[paired_index]]
 
         sorted_index = np.argpartition(distances, 1)
         local_optimal = distances[sorted_index[0]]

@@ -3,14 +3,15 @@
 import numpy as np
 import cv2
 import feature
+import constant as const
 
 # find best shift using RANSAC
 def RANSAC(matched_pairs):
     matched_pairs = np.asarray(matched_pairs)
     
     best_shift = []
-    K = 1000
-    threshold_distance = 3
+    K = const.RANSAC_K
+    threshold_distance = const.RANSAC_THRES_DISTANCE
     
     max_inliner = 0
     for k in range(K):
@@ -27,7 +28,7 @@ def RANSAC(matched_pairs):
         
         inliner = 0
         for diff in difference:
-            if (diff**2).sum()**0.5 < threshold_distance:
+            if np.sqrt((diff**2).sum()) < threshold_distance:
                 inliner = inliner + 1
         
         if inliner > max_inliner:
@@ -66,7 +67,8 @@ def stitching(img1, img2, shift, pool, blending=True):
 
     if blending:
         seam_x = shifted_img1.shape[1]//2
-        shifted_img1 = pool.starmap(alpha_blend, [(shifted_img1[y], shifted_img2[y], seam_x, 2, direction) for y in range(h1)])
+        tasks = [(shifted_img1[y], shifted_img2[y], seam_x, const.ALPHA_BLEND_WINDOW, direction) for y in range(h1)]
+        shifted_img1 = pool.starmap(alpha_blend, tasks)
         shifted_img1 = np.asarray(shifted_img1)
         shifted_img1 = np.concatenate((shifted_img1, splited) if shift[1] > 0 else (splited, shifted_img1), axis=1)
     else:
@@ -99,10 +101,10 @@ def end2end_align(img, pool):
     p2 = img[:,-500:]
 
     cr1 = feature.harris_corner(p1, pool)
-    ds1, pos1 = feature.extract_description(p1, cr1, kernel=5, threshold=0.05)
+    ds1, pos1 = feature.extract_description(p1, cr1, kernel=const.DESCRIPTOR_SIZE, threshold=const.FEATURE_THRESHOLD)
 
     cr2 = feature.harris_corner(p2, pool)
-    ds2, pos2 = feature.extract_description(p2, cr2, kernel=5, threshold=0.05)
+    ds2, pos2 = feature.extract_description(p2, cr2, kernel=const.DESCRIPTOR_SIZE, threshold=const.FEATURE_THRESHOLD)
 
     mp =  feature.matching(ds1, ds2, pos1, pos2, pool, y_range=float('inf'))
 

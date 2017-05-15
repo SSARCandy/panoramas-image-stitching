@@ -9,9 +9,7 @@ import multiprocessing as mp
 import feature
 import utils
 import stitch
-
-
-DEBUG=False
+import constant as const
 
 
 if __name__ == '__main__':
@@ -27,7 +25,7 @@ if __name__ == '__main__':
 
     img_list, focal_length = utils.parse(input_dirname)
     
-    # img_list = img_list[:2]
+    # img_list = img_list[4:10]
 
     print('Warp images to cylinder')
     cylinder_img_list = pool.starmap(utils.cylindrical_projection, [(img_list[i], focal_length[i]) for i in range(len(img_list))])
@@ -50,26 +48,26 @@ if __name__ == '__main__':
         descriptors1, position1 = cache_feature
         if len(descriptors1) == 0:
             corner_response1 = feature.harris_corner(img1, pool)
-            descriptors1, position1 = feature.extract_description(img1, corner_response1, kernel=5, threshold=0.01)
+            descriptors1, position1 = feature.extract_description(img1, corner_response1, kernel=const.DESCRIPTOR_SIZE, threshold=const.FEATURE_THRESHOLD)
         print(str(len(descriptors1))+' features extracted.')
 
         print(' - Find features in img_'+str(i+1)+' .... ', end='', flush=True)
         corner_response2 = feature.harris_corner(img2, pool)
-        descriptors2, position2 = feature.extract_description(img2, corner_response2, kernel=5, threshold=0.01)
+        descriptors2, position2 = feature.extract_description(img2, corner_response2, kernel=const.DESCRIPTOR_SIZE, threshold=const.FEATURE_THRESHOLD)
         print(str(len(descriptors2))+' features extracted.')
 
         cache_feature = [descriptors2, position2]
 
-        if False:
+        if const.DEBUG:
             cv2.imshow('cr1', corner_response1)
             cv2.imshow('cr2', corner_response2)
             cv2.waitKey(0)
         
         print(' - Feature matching .... ', end='', flush=True)
-        matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, pool, y_range=10)
+        matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, pool, y_range=const.MATCHING_Y_RANGE)
         print(str(len(matched_pairs)) +' features matched.')
 
-        if DEBUG:
+        if const.DEBUG:
             utils.matched_pairs_plot(img1, img2, matched_pairs)
 
         print(' - Find best shift using RANSAC .... ', end='', flush=True)
