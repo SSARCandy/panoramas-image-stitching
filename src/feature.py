@@ -43,8 +43,8 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
     features[corner_response > threshold*corner_response.max()] = 255
 
     # Trim feature on image edge
-    features[:10,:] = 0  
-    features[-10:,:] = 0
+    features[:50,:] = 0  
+    features[-50:,:] = 0
     features[:,-10:] = 0
     features[:,:10] = 0
     

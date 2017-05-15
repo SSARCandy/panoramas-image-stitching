@@ -104,12 +104,12 @@ def end2end_align(img, pool):
     cr2 = feature.harris_corner(p2, pool)
     ds2, pos2 = feature.extract_description(p2, cr2, kernel=5, threshold=0.05)
 
-    mp =  feature.matching(ds1, ds2, pos1, pos2, pool, y_range=150)
+    mp =  feature.matching(ds1, ds2, pos1, pos2, pool, y_range=float('inf'))
 
     y_shift, _ = RANSAC(mp)
 
     aligned = img.copy()
-    col_shift = np.linspace(y_shift, 0, num=img.shape[1], dtype=np.uint8)
+    col_shift = np.linspace(y_shift, 0, num=img.shape[1], dtype=np.uint16)
     for x in range(img.shape[1]):
         aligned[:,x] = np.roll(img[:,x], col_shift[x], axis=0)
 
