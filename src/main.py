@@ -20,7 +20,6 @@ if __name__ == '__main__':
     
     input_dirname = sys.argv[1]
     
-
     pool = mp.Pool(mp.cpu_count())
 
     img_list, focal_length = utils.parse(input_dirname)
