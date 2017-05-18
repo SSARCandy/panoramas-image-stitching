@@ -19,6 +19,15 @@ def load_images(source_dir):
 
     return image_list
 
+"""
+Parse the input dir.
+
+Args:
+    source_dir: the dir that have images and a 'image_list.txt'
+
+Returns:
+    A image array and focal_length array
+"""
 def parse(source_dir):
     filenames = []
     focal_length = []
@@ -34,6 +43,16 @@ def parse(source_dir):
 
     return (img_list, focal_length)
 
+"""
+Project image to cylinder
+
+Args:
+    img: input image
+    focal_length: input image's focal length
+
+Return:
+    Cylindrical projection of input image
+"""
 def cylindrical_projection(img, focal_length):
     height, width, _ = img.shape
     cylinder_proj = np.zeros(shape=img.shape, dtype=np.uint8)

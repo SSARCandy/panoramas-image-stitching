@@ -4,7 +4,6 @@ import sys
 import cv2
 import math
 import numpy as np
-# import matplotlib.pyplot as plt
 import multiprocessing as mp
 import feature
 import utils
@@ -57,10 +56,10 @@ if __name__ == '__main__':
 
         cache_feature = [descriptors2, position2]
 
-        # if const.DEBUG:
-        #     cv2.imshow('cr1', corner_response1)
-        #     cv2.imshow('cr2', corner_response2)
-        #     cv2.waitKey(0)
+        if const.DEBUG:
+            cv2.imshow('cr1', corner_response1)
+            cv2.imshow('cr2', corner_response2)
+            cv2.waitKey(0)
         
         print(' - Feature matching .... ', end='', flush=True)
         matched_pairs = feature.matching(descriptors1, descriptors2, position1, position2, pool, y_range=const.MATCHING_Y_RANGE)
