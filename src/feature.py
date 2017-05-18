@@ -62,7 +62,7 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
     height, width = corner_response.shape
 
     # Reduce corner
-    features = np.zeros(shape=(height, width) dtype=np.uint8)
+    features = np.zeros(shape=(height, width), dtype=np.uint8)
     features[corner_response > threshold*corner_response.max()] = 255
 
     # Trim feature on image edge
