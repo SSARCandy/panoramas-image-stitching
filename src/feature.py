@@ -14,7 +14,19 @@ def compute_r(xx_row, yy_row, xy_row, k):
 
     return row_response
 
-def harris_corner(img, pool, k=0.04, block_size=2, kernel=11):
+"""
+Harris corner detector
+
+Args:
+    img: input image
+    pool: for multiprocessing
+    k: harris corner constant value
+    block_size: harris corner windows size
+
+Returns:
+    A corner response matrix. width, height same as input image
+"""
+def harris_corner(img, pool, k=0.04, block_size=2):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray = np.float32(gray)/255
 
@@ -35,12 +47,22 @@ def harris_corner(img, pool, k=0.04, block_size=2, kernel=11):
             
     return np.asarray(corner_response)
     
+"""
+Extract descritpor from corner response image
 
+Args:
+    corner_response: corner response matrix
+    threshlod: only corner response > 'max_corner_response*threshold' will be extracted
+    kernel: descriptor's window size, the descriptor will be kernel^2 dimension vector 
+
+Returns:
+    A pair of (descriptors, positions)
+"""
 def extract_description(img, corner_response, threshold=0.01, kernel=3):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
+    height, width = corner_response.shape
+
     # Reduce corner
-    features = np.zeros(shape=gray.shape, dtype=np.uint8)
+    features = np.zeros(shape=(height, width), dtype=np.uint8)
     features[corner_response > threshold*corner_response.max()] = 255
 
     # Trim feature on image edge
@@ -50,7 +72,6 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
     features[:, :const.FEATURE_CUT_X_EDGE] = 0
     
     # Reduce features using local maximum
-    height, width, _ = img.shape
     window=3
     for y in range(0, height-10, window):
         for x in range(0, width-10, window):
@@ -74,7 +95,20 @@ def extract_description(img, corner_response, threshold=0.01, kernel=3):
                 
     return feature_descriptions[1:], feature_positions
 
+"""
+Matching two groups of descriptors
 
+Args:
+    descriptor1:
+    descriptor2:
+    feature_position1: descriptor1's corrsponsed position
+    feature_position2: descriptor2's corrsponsed position
+    pool: for mulitiprocessing
+    y_range: restrict only to match y2-y_range < y < y2+y_range
+
+Returns:
+    matched position pairs, it is a Nx2x2 matrix
+"""
 def matching(descriptor1, descriptor2, feature_position1, feature_position2, pool, y_range=10):
     TASKS_NUM = 32
 

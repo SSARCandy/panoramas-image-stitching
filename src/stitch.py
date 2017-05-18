@@ -2,10 +2,21 @@
 
 import numpy as np
 import cv2
-import feature
 import constant as const
 
-# find best shift using RANSAC
+"""
+Find best shift using RANSAC
+
+Args:
+    matched_pairs: matched pairs of feature's positions, its an Nx2x2 matrix
+    prev_shift: previous shift, for checking shift direction.
+
+Returns:
+    Best shift [y x]. ex. [4 234]
+
+Raise:
+    ValueError: Shift direction NOT same as previous shift.
+"""
 def RANSAC(matched_pairs, prev_shift):
     matched_pairs = np.asarray(matched_pairs)
     
@@ -44,7 +55,19 @@ def RANSAC(matched_pairs, prev_shift):
     return best_shift
 
 
+"""
+Stitch two image with blending.
 
+Args:
+    img1: first image
+    img2: second image
+    shift: the relative position between img1 and img2
+    pool: for multiprocessing
+    blending: using blending or not
+
+Returns:
+    A stitched image
+"""
 def stitching(img1, img2, shift, pool, blending=True):
     padding = [
         (shift[0], 0) if shift[0] > 0 else (0, -shift[0]),
@@ -101,7 +124,16 @@ def alpha_blend(row1, row2, seam_x, window, direction='left'):
 
     return new_row
 
+"""
+End to end alignment
 
+Args:
+    img: panoramas image
+    shifts: all shifts for each image in panoramas
+
+Returns:
+    A image that fixed the y-asix shift error
+"""
 def end2end_align(img, shifts):
     sum_y, sum_x = np.sum(shifts, axis=0)
 
@@ -120,6 +152,16 @@ def end2end_align(img, shifts):
 
     return aligned
 
+
+"""
+Crop the black border in image
+
+Args:
+    img: a panoramas image
+
+Returns:
+    Cropped image
+"""
 def crop(img):
     _, thresh = cv2.threshold(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), 1, 255, cv2.THRESH_BINARY)
     upper, lower = [-1, -1]
