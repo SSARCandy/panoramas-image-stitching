@@ -4,7 +4,7 @@
 ## Requirement
 
 - python3 (or higher)
-- opencv 3.0 (or higher)
+- opencv 3 (4+ may encounter issue. ref [#11](https://github.com/SSARCandy/panoramas-image-stitching/issues/11))
 
 You will need to install some package using `pip3`:
 
