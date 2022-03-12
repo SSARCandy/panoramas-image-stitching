@@ -71,8 +71,7 @@ def cylindrical_projection(img, focal_length):
     # Crop black border
     # ref: http://stackoverflow.com/questions/13538748/crop-black-edges-with-opencv
     _, thresh = cv2.threshold(cv2.cvtColor(cylinder_proj, cv2.COLOR_BGR2GRAY), 1, 255, cv2.THRESH_BINARY)
-    contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    x, y, w, h = cv2.boundingRect(contours[0])
+    x, y, w, h = cv2.boundingRect(thresh)
         
     return cylinder_proj[y:y+h, x:x+w]
 
